@@ -29,7 +29,8 @@ Local Fixpoint get_precision (n : positive) : positive :=
   | 1 => 1
   end%positive.
 
-Local Fixpoint Q_to_precision' (n : positive) (b : Bits) (acc : N) {T} (k : N -> Bits -> T) : T :=
+Local Fixpoint Q_to_precision' (n : positive) (b : Bits) (acc : N)
+      {T} (k : N -> Bits -> T) : T :=
   match n with
   | xH => match b with
           | Bit Int32.D1 b' => k (2 * acc + 1)%N b'
