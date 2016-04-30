@@ -8,7 +8,7 @@ Makefile.coq: _CoqProject Makefile
 	coq_makefile -f _CoqProject -o Makefile.coq
 
 dist:
-	git archive --prefix=mirror-core/ -o mirror-core.tgz HEAD
+	git archive --prefix=coq-markov/ -o coq-markov.tgz HEAD
 
 install: coq
 	$(MAKE) -f Makefile.coq install
