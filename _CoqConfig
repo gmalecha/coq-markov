@@ -4,3 +4,6 @@
 ./theories/Random.v
 ./theories/RandomM.v
 ./theories/Markov.v
+
+
+./examples/Demo.v
