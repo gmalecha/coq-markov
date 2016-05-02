@@ -14,13 +14,16 @@ Require Import ExtLib.Data.Monads.StateMonad.
 Require Import Markov.Random.
 
 (** Following the semantics of Huang and Morrisett:
- **  [An application of computable distributions to the semantics of probabilistic programming languages]
+ **  [An application of computable distributions to the semantics of
+ **   probabilistic programming languages]
  **)
 Definition PD (T : Type) : Type := state Bits T.
 Global Instance Monad_PD : Monad PD := Monad_state _.
 
+(*
 (**
  ** A sampler for biased coin flips
+ ** NOTE: This sampler is not correct for rationals that are not [x/2^n]
  **)
 Local Fixpoint get_precision (n : positive) : positive :=
   match n with
@@ -64,13 +67,22 @@ Definition flip (q : Q) : PD bool :=
                              end, b')
                           end
                    end |}.
+*)
 
 (**
  ** A fair coin flip
  **)
 Definition fair_coin : PD bool :=
-  flip {| Qnum := 1 ; Qden := 2 |}.
+  {| runState := fun b =>
+                   match b with
+                   | Bit x b =>
+                     (match x with
+                      | Int32.D0 => false
+                      | Int32.D1 => true
+                      end, b)
+                   end |}.
 
+(*
 (**
  ** Random from Range
  **)
@@ -82,6 +94,7 @@ Fixpoint from_range (low count : nat) : PD nat :=
          (fun x => if x then ret low
                    else from_range (S low) n)
   end%nat.
+*)
 
 (*
 Definition digits (n : nat) : PD (vector Int32.digits n) :=
@@ -135,7 +148,8 @@ Section sample_discrete.
 
   Definition sample_discrete (n : nat) (c : PD T) : alist T Q :=
     fmap (fun x => this (Q2Qc {| Qnum := Zpos x ; Qden := Pos.of_nat n |}))
-         (List.fold_left (fun d r => increment r d) (take n (sample c lfsr113)) nil).
+         (List.fold_left (fun d r => increment r d) (take n (sample c lfsr113))
+                         nil).
 End sample_discrete.
 
 

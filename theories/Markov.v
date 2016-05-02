@@ -52,7 +52,7 @@ Section on_off.
                  else ret (negb s)
    ; Obs    := bool
    ; Look   := fun s =>
-                 x <- flip {| QArith_base.Qnum := 3 ; QArith_base.Qden := 4 |} ;;
+                 x <- fair_coin (* flip {| QArith_base.Qnum := 3 ; QArith_base.Qden := 4 |} *) ;;
                  if x then ret s
                  else ret (negb s)
    |}.
